@@ -1,4 +1,7 @@
+
+# library used
 import cv2
+from os.path import isfile
 
 
 def char_generator(message):
@@ -19,6 +22,7 @@ def encode_image(image_location, msg):
   img = get_image(image_location)
   msg_gen = char_generator(msg)
   pattern = gcd(len(img), len(img[0]))
+  print(msg_gen)
   for i in range(len(img)):
     for j in range(len(img[0])):
       if (i+1 * j+1) % pattern == 0:
@@ -40,4 +44,23 @@ def decode_image(img_loc):
         else:
           return message
 
+def validImageFile(image):
+    if not image.lower().endswith(('.jpg','png','jpeg')):
+        print('Please give a valid Image file')
+        return False
+    if not isfile(image):
+        print('File Not Found')
+        return False
+    return True
 
+image = input("Image Path :")
+while not validImageFile(image):
+    image = input("Image Path :")
+text = input("Message to encode: ")
+img = encode_image(image,text)
+f = 'cat_encoded.png'
+cv2.imwrite(f, img)
+import time
+time.sleep(2)
+
+print(decode_image('cat_encoded.png'))
